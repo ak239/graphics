@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <assert.h>
+#include <gl/glew.h>
 
 namespace nv {
 

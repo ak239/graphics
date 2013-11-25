@@ -17,7 +17,7 @@ Texture::~Texture(void)
 bool Texture::loadFromFile(const char* fileName, GLint textureUnit)
 {
 	nv::Image img;
-	if (img.loadImageFromFile(fileName))
+	if (!img.loadImageFromFile(fileName))
 		return false;
 
 	GLuint textureID;
@@ -26,6 +26,8 @@ bool Texture::loadFromFile(const char* fileName, GLint textureUnit)
     glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexImage2D( GL_TEXTURE_2D, 0, img.getInternalFormat(), img.getWidth(), img.getHeight(), 0, img.getFormat(), img.getType(), img.getLevel(0));
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glGenerateMipmap(GL_TEXTURE_2D);
