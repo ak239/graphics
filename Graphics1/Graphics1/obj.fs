@@ -33,5 +33,6 @@ float CalcDepth(float z)
 
 
 void main(){
+    //color = vec4(vec3(UV.x), 1.0f);
     color = texture2D( textureSampler, UV * uvScale );
 }

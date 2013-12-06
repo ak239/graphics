@@ -38,18 +38,45 @@ void Sphere::init(const unsigned int depth)
     for(int i = 0; i < 20; i++)
         subdivide(vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], m_vexrtexBufferData, depth);
 
-	for (size_t i = 0; i < m_vexrtexBufferData.size(); i++)
+	for (size_t k = 0; k < m_vexrtexBufferData.size() / 3; ++k)
 	{
-		const glm::vec3& point = m_vexrtexBufferData[i];
-		GLfloat r     = glm::length(point);
+		std::vector<size_t> uNearOne;
+		std::vector<size_t> uNearZero;
 
-		GLfloat theta = 0.0f;
-		theta = glm::acos(point.z / r);
-		GLfloat phi = 0.0f;
-		phi   = glm::atan2(point.y, point.x);	
+		for (size_t i = k * 3; i < k * 3 + 3; i++)
+		{
+			const glm::vec3& point = m_vexrtexBufferData[i];
+			GLfloat r     = glm::length(point);
 
-		m_uvBufferData.push_back(phi / 2.0f / glm::pi<GLfloat>());
-		m_uvBufferData.push_back(1.0f - theta / glm::pi<GLfloat>());
+			GLfloat theta = 0.0f;
+			theta = glm::acos(point.z / r);
+			GLfloat phi = 0.0f;
+			phi   = glm::atan2(point.y, point.x);
+
+			GLfloat u = phi / 2.0f / glm::pi<GLfloat>();
+			GLfloat v = 1.0f - theta / glm::pi<GLfloat>();
+
+			glm::vec3 d = glm::normalize(point);
+
+			u = 0.5f + glm::atan2(d.z, d.x) / 2.0f / glm::pi<GLfloat>();
+			v = 0.5f - glm::asin(d.y) / glm::pi<GLfloat>();
+
+			m_uvBufferData.push_back(u);
+			m_uvBufferData.push_back(v);
+
+			if (u > 0.8f)
+				uNearOne.push_back(m_uvBufferData.size() - 2);
+			if (u < 0.2f)
+				uNearZero.push_back(m_uvBufferData.size() - 2);
+		}
+
+		// fix trinagles with very diff u coords
+		if (uNearOne.size() > uNearZero.size())
+			for (size_t i = 0; i < uNearZero.size(); ++i)
+				m_uvBufferData[uNearZero[i]] = 1.0f;
+		if (uNearOne.size() < uNearZero.size())
+			for (size_t i = 0; i < uNearOne.size(); ++i)
+				m_uvBufferData[uNearOne[i]] = 0.0f;
 	}
 
     glGenBuffers(1, &m_vertexBuffer);
@@ -73,6 +100,7 @@ void Sphere::setShader(Shader* _shader)
 
 void Sphere::renderImpl()
 {
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (m_shader)
 	{
 		m_shader->use();

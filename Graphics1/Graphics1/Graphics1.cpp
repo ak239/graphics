@@ -112,7 +112,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	Sphere sphere;
 	sphere.setShader(&objShader);
-	sphere.init(5);
+	sphere.init(3);
 
 	spherePointer = &sphere;
 	
