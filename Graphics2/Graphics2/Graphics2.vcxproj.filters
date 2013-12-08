@@ -21,9 +21,6 @@
     <ClCompile Include="Common.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="GLContext.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -39,19 +36,7 @@
     <ClCompile Include="MouseCamera.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Mover.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="nvImage.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="nvImageDDS.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="RenderObject.cpp">
@@ -63,16 +48,7 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="StreamObject.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="UniformWrapper.cpp">
@@ -101,9 +77,6 @@
     <ClInclude Include="Common.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="GLContext.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
@@ -119,16 +92,7 @@
     <ClInclude Include="MouseCamera.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Mover.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="nvImage.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="RenderObject.h">
@@ -140,19 +104,7 @@
     <ClInclude Include="Shader.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="StreamObject.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="UniformWrapper.h">
@@ -172,8 +124,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="obj.fs" />
-    <None Include="obj.vs" />
     <None Include="flat.vs" />
     <None Include="flat.fs" />
   </ItemGroup>

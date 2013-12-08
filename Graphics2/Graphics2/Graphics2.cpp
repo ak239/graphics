@@ -1,23 +1,13 @@
 #include "stdafx.h"
-#include <cmath>
 #include <fstream>
-#include <memory>
 
 #include "GlutApp.h"
 #include "Logger.h"
 #include "UniformWrapper.h"
-#include "Camera.h"
 #include "MouseCamera.h"
 #include "Scene.h"
-#include "Mover.h"
 #include "Shader.h"
-#include "StreamObject.h"
 #include "UniformWrapper.h"
-#include "Plane.h"
-#include "nvImage.h"
-#include "Cube.h"
-#include "Sphere.h"
-#include "Texture.h"
 #include "ObjectFromObj.h"
 #include "ObjWithFragNormals.h"
 
@@ -27,7 +17,6 @@ GLfloat     MouseSpeed = 0.001f;
 bool IsLeftButton  = false;
 bool IsRightButton = false;
 
-// settings
 typedef enum { phong = 1, blinnPhong = 2 } ModelType;
 ModelType modelType = phong;
 UniformWrapper<GLuint> modelTypeUniform;
@@ -59,10 +48,8 @@ UniformWrapper<vec3> cameraPosUniform;
 
 void keyboardFunc(unsigned char key, int x, int y);
 void motionFunc(int x, int y);
-void idleFunc();
 void timerFunc(int value);
 void closeFunc();
-void reshapeFunc(int width, int height);
 void mouseFunc(int button, int state, int x, int y);
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -72,9 +59,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	GlutApp app(argc, argv, "Graphics2 App");
 
 	GlutWindow wnd = app.getMainWindow();
-	wnd.setMainReshape(reshapeFunc);
 
 	TwInit(TW_OPENGL_CORE, NULL);
+
 	TwBar *myBar;
 	myBar = TwNewBar("Settings");
 
@@ -85,10 +72,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	TwAddVarRW(myBar, "Fill type", fillTypeTwType, &fillType, "");
 
 	TwAddSeparator(myBar, "Point", "");
-	//TwAddVarRW(myBar, "Color",       TW_TYPE_COLOR3F, &pointColor.x,       "");
 	TwAddVarRW(myBar, "Position.X",  TW_TYPE_FLOAT,   &pointPosition.x,  "");
 	TwAddVarRW(myBar, "Position.Y",  TW_TYPE_FLOAT,   &pointPosition.y,  "");
-	TwAddVarRW(myBar, "Position.Z",  TW_TYPE_FLOAT,   &pointPosition.z,  "");
 	TwAddVarRW(myBar, "Position.Z",  TW_TYPE_FLOAT,   &pointPosition.z,  "");
 	TwAddVarRW(myBar, "Attenuation", TW_TYPE_FLOAT,   &pointAttenuation, "");
 
@@ -101,29 +86,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	TwAddSeparator(myBar, "Global", "");
 	TwAddVarRW(myBar, "mouse speed", TW_TYPE_FLOAT, &MouseSpeed, "");
 
-	mouseCamera.setDist(20.0f);
+	mouseCamera.setDist(0.7f);
 
 	Shader objShader(wnd.getContext());
-//	objShader.loadFromFile("obj", Shader::Vertex | Shader::Fragment);
 	objShader.loadFromFile("flat", Shader::Vertex | Shader::Fragment);
 	objShader.link();
 
 	fillTypeUniform         = objShader.getUniform<GLuint>("fillType");
-
 	modelTypeUniform        = objShader.getUniform<GLuint>("modelType");
-
-	//pointColorUniform       = objShader.getUniform<vec3>("pointColor");
 	pointPositionUniform    = objShader.getUniform<vec3>("pointPosition");
 	pointAttenuationUniform = objShader.getUniform<GLfloat>("pointAttenuation");
-
 	ambientColorUniform = objShader.getUniform<vec3>("ambientColor");
 	diffuseColorUniform = objShader.getUniform<vec3>("diffuseColor");
-
 	specularColorUniform = objShader.getUniform<vec3>("specularColor");
 	specularPowerUniform = objShader.getUniform<GLfloat>("specularPower");
 
 	cameraPosUniform = objShader.getUniform<vec3>("cameraPos");
-
 
 	ObjectFromObj obj(wnd.getContext());
 	ObjWithFragNormals data;
@@ -133,22 +111,15 @@ int _tmain(int argc, _TCHAR* argv[])
         file >> data;
 	obj.setData(&data);
 	obj.setShader(&objShader);
-    //obj.setPolygonMode();
-
-	Sphere sphere;
-	sphere.init(1);
-	sphere.setShader(&objShader);
 
 	Scene scene(wnd.getContext());
 	scene.setCamera(&mouseCamera);
 	scene.addObject(&obj);
-	//scene.addObject(&sphere);
 
 	wnd.setScene(&scene);
 
 	glutKeyboardFunc(&keyboardFunc);
 	glutMotionFunc(&motionFunc);
-	glutIdleFunc(&idleFunc);
 	glutTimerFunc(33, &timerFunc, 0);
 	glutCloseFunc(&closeFunc);
 	glutMouseFunc(&mouseFunc);
@@ -206,11 +177,9 @@ void motionFunc(int x, int y)
 
 void timerFunc(int value)
 {
-	// here processing changes
 	fillTypeUniform.setValue(fillType);
 	modelTypeUniform.setValue(modelType);
 
-	//pointColorUniform.setValue(pointColor);
 	pointPositionUniform.setValue(pointPosition);
 	pointAttenuationUniform.setValue(pointAttenuation);
 
@@ -226,17 +195,9 @@ void timerFunc(int value)
 	glutTimerFunc(33, &timerFunc, 0);
 }
 
-void idleFunc()
-{
-}
-
 void closeFunc()
 {
 	TwTerminate();
-}
-
-void reshapeFunc(int width, int height)
-{
 }
 
 void mouseFunc(int button, int state, int x, int y)

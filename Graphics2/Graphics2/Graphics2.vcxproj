@@ -83,7 +83,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DecompressObj.cpp" />
     <ClCompile Include="GLContext.cpp" />
     <ClCompile Include="GlutApp.cpp" />
@@ -91,55 +90,38 @@
     <ClCompile Include="Graphics2.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MouseCamera.cpp" />
-    <ClCompile Include="Mover.cpp" />
-    <ClCompile Include="nvImage.cpp" />
-    <ClCompile Include="nvImageDDS.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectFromObj.cpp" />
     <ClCompile Include="ObjWithFragNormals.cpp" />
-    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="StreamObject.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UniformWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Cube.h" />
     <ClInclude Include="DecompressObj.h" />
     <ClInclude Include="GLContext.h" />
     <ClInclude Include="GlutApp.h" />
     <ClInclude Include="GlutWindow.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MouseCamera.h" />
-    <ClInclude Include="Mover.h" />
-    <ClInclude Include="nvImage.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectFromObj.h" />
     <ClInclude Include="ObjWithFragNormals.h" />
-    <ClInclude Include="Plane.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Sphere.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StreamObject.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="UniformWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="flat.fs" />
     <None Include="flat.vs" />
-    <None Include="obj.fs" />
-    <None Include="obj.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
