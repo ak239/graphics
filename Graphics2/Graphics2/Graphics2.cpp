@@ -45,6 +45,9 @@ GLfloat   specularPower = 20.0f;
 UniformWrapper<GLfloat> specularPowerUniform;
 
 UniformWrapper<vec3> cameraPosUniform;
+bool drawCarcas = false;
+
+RenderObject* carcasPointer = nullptr;
 
 void keyboardFunc(unsigned char key, int x, int y);
 void motionFunc(int x, int y);
@@ -84,6 +87,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	TwAddVarRW(myBar, "Specular Power", TW_TYPE_FLOAT,   &specularPower,   "");
 
 	TwAddSeparator(myBar, "Global", "");
+	TwAddVarRW(myBar, "draw carcas", TW_TYPE_BOOL32, &drawCarcas, "");
 	TwAddVarRW(myBar, "mouse speed", TW_TYPE_FLOAT, &MouseSpeed, "");
 
 	mouseCamera.setDist(0.7f);
@@ -111,10 +115,22 @@ int _tmain(int argc, _TCHAR* argv[])
         file >> data;
 	obj.setData(&data);
 	obj.setShader(&objShader);
+	obj.setPolygonOffset(1.0f, 1.0f);
+
+	Shader carcasShader(wnd.getContext());
+	carcasShader.loadFromFile("carcas", Shader::Vertex | Shader::Fragment | Shader::Geometry);
+	carcasShader.link();	
+
+	ObjectFromObj carcas(wnd.getContext());
+	carcas.setData(&data);
+	carcas.setShader(&carcasShader);
+
+	carcasPointer = &carcas;
 
 	Scene scene(wnd.getContext());
 	scene.setCamera(&mouseCamera);
 	scene.addObject(&obj);
+	scene.addObject(&carcas);
 
 	wnd.setScene(&scene);
 
@@ -177,6 +193,8 @@ void motionFunc(int x, int y)
 
 void timerFunc(int value)
 {
+	carcasPointer->setVisible(drawCarcas);
+
 	fillTypeUniform.setValue(fillType);
 	modelTypeUniform.setValue(modelType);
 

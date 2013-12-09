@@ -5,6 +5,7 @@
 
 #include "GLContext.h"
 #include "Common.h"
+#include "Logger.h"
 
 Shader::~Shader(void)
 {
@@ -45,6 +46,16 @@ bool Shader::loadFromFile(const char* fileName, GLuint type)
 			return false;		
 		}
 	}
+
+	if (type & Geometry)
+	{
+		shaderName    = boost::str(boost::format("%s.gs") % fileName);
+		if (!loadShader(shaderName, GL_GEOMETRY_SHADER, program)){
+			glDeleteProgram(program);
+			return false;		
+		}
+	}
+
 	OPENGL_CHECK_FOR_ERRORS();
 
 	m_program = program;
