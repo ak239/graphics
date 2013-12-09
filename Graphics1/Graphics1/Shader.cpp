@@ -5,6 +5,7 @@
 
 #include "GLContext.h"
 #include "Common.h"
+#include "Logger.h"
 
 Shader::~Shader(void)
 {
@@ -45,6 +46,16 @@ bool Shader::loadFromFile(const char* fileName, GLuint type)
 			return false;		
 		}
 	}
+
+	if (type & Geometry)
+	{
+		shaderName    = boost::str(boost::format("%s.gs") % fileName);
+		if (!loadShader(shaderName, GL_GEOMETRY_SHADER, program)){
+			glDeleteProgram(program);
+			return false;		
+		}
+	}
+
 	OPENGL_CHECK_FOR_ERRORS();
 
 	m_program = program;
@@ -106,6 +117,7 @@ bool Shader::loadShader(const std::string& fileName, GLuint type, GLuint program
 
 	GLint sourceLength = 0;
 	char* shaderSource = Common::GetFileContent(fileName, &sourceLength);
+	//std::cout << shaderSource << std::endl;
 	if (!shaderSource){
 		glDeleteShader(shader);
 		LOG_ERROR(boost::str(boost::format("Creating shader program fail: can't get file content - %s") % fileName));

@@ -39,6 +39,7 @@ TwEnumVal minFilterEv[] = { {GL_NEAREST, "nearest"}, {GL_LINEAR, "linear"}, {GL_
 RenderObject* planePointer = nullptr;
 RenderObject* cubePointer = nullptr;
 RenderObject* spherePointer = nullptr;
+RenderObject* carcasPointer = nullptr;
 
 std::unique_ptr<Texture> earthTexture;
 std::unique_ptr<Texture> lennaTexture;
@@ -113,12 +114,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	Sphere sphere;
 	sphere.setShader(&objShader);
 	sphere.init(3);
+	sphere.setPolygonOffset(1.0f, 1.0f);
+
+	Shader sphereShader(wnd.getContext());
+	sphereShader.loadFromFile("sphere", Shader::Vertex | Shader::Fragment | Shader::Geometry);
+	sphereShader.link();
+
+	Sphere carcasSphere;
+	carcasSphere.setShader(&sphereShader);
+	carcasSphere.init(3);
 
 	spherePointer = &sphere;
+	carcasPointer = &carcasSphere;
 	
 	Scene scene(wnd.getContext());
 	scene.setCamera(&mouseCamera);
 	scene.addObject(&sphere);
+	scene.addObject(&carcasSphere);
 	scene.addObject(&cube);
 	scene.addObject(&plane);
 	wnd.setScene(&scene);
@@ -192,6 +204,7 @@ void timerFunc(int value)
 		planePointer->setVisible(true);  
 		cubePointer->setVisible(false); 
 		spherePointer->setVisible(false); 
+		carcasPointer->setVisible(false);
 		lennaTexture->activeAndBind();
 		lennaTexture->setMagFilter(magFilter);		
 		lennaTexture->setMinFilter(minFilter);		
@@ -201,6 +214,7 @@ void timerFunc(int value)
 		planePointer->setVisible(false); 
 		cubePointer->setVisible(true);  
 		spherePointer->setVisible(false); 
+		carcasPointer->setVisible(false);
 		lennaTexture->activeAndBind();
 		lennaTexture->setMagFilter(magFilter);
 		lennaTexture->setMinFilter(minFilter);		
@@ -210,6 +224,7 @@ void timerFunc(int value)
 		planePointer->setVisible(false); 
 		cubePointer->setVisible(false); 
 		spherePointer->setVisible(true); 
+		carcasPointer->setVisible(true);
 		earthTexture->activeAndBind();
 		earthTexture->setMagFilter(magFilter);
 		earthTexture->setMinFilter(minFilter);		

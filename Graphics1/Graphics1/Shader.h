@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "UniformWrapper.h"
+#include "Logger.h"
 
 class Shader : public Object
 {
@@ -12,7 +13,8 @@ public:
 
 	enum Type{
 		Vertex   = 1 << 1,
-		Fragment = 1 << 2
+		Fragment = 1 << 2,
+		Geometry = 1 << 3
 	};
 	bool loadFromFile(const char* fileName, GLuint type);
 
