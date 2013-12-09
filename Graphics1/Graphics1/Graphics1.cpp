@@ -46,6 +46,7 @@ std::unique_ptr<Texture> lennaTexture;
 
 UniformWrapper<GLfloat> uvScaleUniform;
 GLfloat uvScale = 1.0f;
+bool drawCarcas = true;
 
 void keyboardFunc(unsigned char key, int x, int y);
 void motionFunc(int x, int y);
@@ -78,9 +79,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	TwType minFilterType = TwDefineEnum("MinFilter", minFilterEv, 6);
 	TwAddVarRW(myBar, "Min filter", minFilterType, &minFilter, "");
+	TwAddVarRW(myBar, "Sphere carcas", TW_TYPE_BOOL32, &drawCarcas, "");
 
 	TwAddVarRW(myBar, "mouse speed", TW_TYPE_FLOAT, &MouseSpeed, "");
-
+	
 	mouseCamera.setDist(20.0f);
 
 	Shader objShader(wnd.getContext());
@@ -224,7 +226,7 @@ void timerFunc(int value)
 		planePointer->setVisible(false); 
 		cubePointer->setVisible(false); 
 		spherePointer->setVisible(true); 
-		carcasPointer->setVisible(true);
+		carcasPointer->setVisible(drawCarcas);
 		earthTexture->activeAndBind();
 		earthTexture->setMagFilter(magFilter);
 		earthTexture->setMinFilter(minFilter);		
