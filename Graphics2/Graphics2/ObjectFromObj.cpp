@@ -50,8 +50,9 @@ void ObjectFromObj::setShader(Shader* _shader)
 	shader_ = _shader;
 	if (shader_)
 	{
-		MV_ = shader_->getUniform<mat4>("MV");
-		P_  = shader_->getUniform<mat4>("P");
+		M_ = shader_->getUniform<mat4>("M");
+		V_ = shader_->getUniform<mat4>("V");
+		P_ = shader_->getUniform<mat4>("P");
 	}
 }
 
@@ -61,7 +62,8 @@ void ObjectFromObj::renderImpl()
 	{
 		shader_->use();
 
-		MV_.setValue(getCameraView() * getModel());
+		M_.setValue(getModel());
+		V_.setValue(getCameraView());
 		P_.setValue(getProjection());
 	}
 

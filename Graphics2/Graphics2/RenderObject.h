@@ -7,7 +7,7 @@ class RenderObject : public Object
 {
 public:
 	RenderObject() : m_polygonMode(GL_FILL), m_factor(0.0f), m_units(0.0f), m_isVisible(true){}
-	RenderObject(GLContext _context):Object(_context), m_polygonMode(GL_FILL), m_factor(0.0f), m_units(0.0f), m_isVisible(true){}
+	RenderObject(GLContext _context):Object(_context), m_polygonMode(GL_FILL), m_factor(0.0f), m_units(0.0f), m_isVisible(true), m_scale(1.0f){}
 
 	void render();
 	virtual void reshape(int width, int height){}
@@ -17,6 +17,9 @@ public:
 
 	void setPosition(const glm::vec3& position);
 	const glm::vec3& getPosition() const;
+
+	void setScale(const glm::vec3& scale);
+	const glm::vec3& getScale() const;
 
 	virtual glm::mat4 getModel();
 
@@ -48,6 +51,7 @@ private:
 	glm::mat4 m_projection;
 	glm::vec3 m_camPos;
 	glm::vec3 m_position;
+	glm::vec3 m_scale;
 	glm::vec3 m_cameraDir;
 	glm::mat4 m_cameraView;
 

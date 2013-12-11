@@ -40,7 +40,8 @@ private:
 	GLuint fragNormalsBuffer_;
 
 	Shader* shader_;
-	UniformWrapper<mat4> MV_;
+	UniformWrapper<mat4> M_;
+	UniformWrapper<mat4> V_;
 	UniformWrapper<mat4> P_;
 };
 

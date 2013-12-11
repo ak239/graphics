@@ -83,6 +83,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="CubemapTexture.cpp" />
     <ClCompile Include="DecompressObj.cpp" />
     <ClCompile Include="GLContext.cpp" />
     <ClCompile Include="GlutApp.cpp" />
@@ -90,6 +92,8 @@
     <ClCompile Include="Graphics2.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MouseCamera.cpp" />
+    <ClCompile Include="nvImage.cpp" />
+    <ClCompile Include="nvImageDDS.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectFromObj.cpp" />
@@ -97,18 +101,23 @@
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="UniformWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayStaticBuffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="CubemapTexture.h" />
     <ClInclude Include="DecompressObj.h" />
     <ClInclude Include="GLContext.h" />
     <ClInclude Include="GlutApp.h" />
     <ClInclude Include="GlutWindow.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MouseCamera.h" />
+    <ClInclude Include="nvImage.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectFromObj.h" />
@@ -116,8 +125,10 @@
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UniformWrapper.h" />
+    <ClInclude Include="VertexAttribArray.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="flat.fs" />

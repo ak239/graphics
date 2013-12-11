@@ -10,6 +10,9 @@
 #include "UniformWrapper.h"
 #include "ObjectFromObj.h"
 #include "ObjWithFragNormals.h"
+#include "CubemapTexture.h"
+#include "Cube.h"
+#include "Sphere.h"
 
 MouseCamera mouseCamera;
 GLint       LastTime;
@@ -27,7 +30,7 @@ FillType fillType = flat;
 UniformWrapper<GLuint> fillTypeUniform;
 TwEnumVal fillTypeTwEnum[] = {{ flat, "flat"}, { perVertex, "per-vertex"}, { perFragment, "per-fragment" }};
 
-glm::vec3 pointPosition(0.0f, 2.0f, 0.0f);
+glm::vec3 pointPosition(0.0f, 1.0f, 0.0f);
 UniformWrapper<vec3> pointPositionUniform;
 GLfloat   pointAttenuation = 0.5f;
 UniformWrapper<GLfloat> pointAttenuationUniform;
@@ -48,6 +51,10 @@ UniformWrapper<vec3> cameraPosUniform;
 bool drawCarcas = false;
 
 RenderObject* carcasPointer = nullptr;
+RenderObject* spherePointer = nullptr;
+RenderObject* cubePointer   = nullptr;
+RenderObject* objectPointer = nullptr;
+glm::vec3 objectPosition = vec3(0.0f);
 
 void keyboardFunc(unsigned char key, int x, int y);
 void motionFunc(int x, int y);
@@ -82,9 +89,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	TwAddSeparator(myBar, "Scene", "");
 	TwAddVarRW(myBar, "Ambient Color",  TW_TYPE_COLOR3F, &ambientColor.x,  "");
-	TwAddVarRW(myBar, "Diffuse Color",  TW_TYPE_COLOR3F, &diffuseColor.x,  "");
-	TwAddVarRW(myBar, "Specular Color", TW_TYPE_COLOR3F, &specularColor.x, "");
+	//TwAddVarRW(myBar, "Diffuse Color",  TW_TYPE_COLOR3F, &diffuseColor.x,  "");
+	//TwAddVarRW(myBar, "Specular Color", TW_TYPE_COLOR3F, &specularColor.x, "");
 	TwAddVarRW(myBar, "Specular Power", TW_TYPE_FLOAT,   &specularPower,   "");
+	TwAddVarRW(myBar, "Object position", TW_TYPE_DIR3F, &objectPosition, "");
 
 	TwAddSeparator(myBar, "Global", "");
 	TwAddVarRW(myBar, "draw carcas", TW_TYPE_BOOL32, &drawCarcas, "");
@@ -96,6 +104,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	objShader.loadFromFile("flat", Shader::Vertex | Shader::Fragment);
 	objShader.link();
 
+	CubemapTexture texture;
+	texture.loadFromFile("");
+	texture.activeAndBind(GL_TEXTURE0);
+
 	fillTypeUniform         = objShader.getUniform<GLuint>("fillType");
 	modelTypeUniform        = objShader.getUniform<GLuint>("modelType");
 	pointPositionUniform    = objShader.getUniform<vec3>("pointPosition");
@@ -104,6 +116,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	diffuseColorUniform = objShader.getUniform<vec3>("diffuseColor");
 	specularColorUniform = objShader.getUniform<vec3>("specularColor");
 	specularPowerUniform = objShader.getUniform<GLfloat>("specularPower");
+	objShader.getUniform<GLuint>("gCubemapTexture").setValue(0);
 
 	cameraPosUniform = objShader.getUniform<vec3>("cameraPos");
 
@@ -116,6 +129,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	obj.setData(&data);
 	obj.setShader(&objShader);
 	obj.setPolygonOffset(1.0f, 1.0f);
+	obj.setPosition(vec3(0.0f, -0.5f, 0.0f));
+	objectPointer = &obj;
 
 	Shader carcasShader(wnd.getContext());
 	carcasShader.loadFromFile("carcas", Shader::Vertex | Shader::Fragment | Shader::Geometry);
@@ -124,11 +139,34 @@ int _tmain(int argc, _TCHAR* argv[])
 	ObjectFromObj carcas(wnd.getContext());
 	carcas.setData(&data);
 	carcas.setShader(&carcasShader);
+	carcas.setPosition(vec3(0.0f, -0.5f, 0.0f));
 
+	Sphere sphere(wnd.getContext());
+	sphere.init(3);
+	sphere.setShader(&carcasShader);
+	sphere.setScale(vec3(0.2f));
+
+	spherePointer = &sphere;
 	carcasPointer = &carcas;
+
+	Shader cubeShader(wnd.getContext());
+	cubeShader.loadFromFile("obj", Shader::Vertex | Shader::Fragment);
+	cubeShader.link();
+
+	cubeShader.getUniform<GLuint>("textureSampler").setValue(0);
+
+	Cube cube(wnd.getContext());
+	cube.init();
+	cube.setTexture(&texture);
+	cube.setShader(&cubeShader);
+	cube.setScale(vec3(0.1f));
+
+	cubePointer = &cube;
 
 	Scene scene(wnd.getContext());
 	scene.setCamera(&mouseCamera);
+	scene.addObject(&cube);
+	scene.addObject(&sphere);
 	scene.addObject(&obj);
 	scene.addObject(&carcas);
 
@@ -194,12 +232,17 @@ void motionFunc(int x, int y)
 void timerFunc(int value)
 {
 	carcasPointer->setVisible(drawCarcas);
+	carcasPointer->setPosition(objectPosition);
+	objectPointer->setPosition(objectPosition);
 
 	fillTypeUniform.setValue(fillType);
 	modelTypeUniform.setValue(modelType);
 
 	pointPositionUniform.setValue(pointPosition);
 	pointAttenuationUniform.setValue(pointAttenuation);
+
+	spherePointer->setPosition(pointPosition);
+	cubePointer->setPosition(pointPosition);
 
 	ambientColorUniform.setValue(ambientColor);
 	diffuseColorUniform.setValue(diffuseColor);

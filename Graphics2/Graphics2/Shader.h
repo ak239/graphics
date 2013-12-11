@@ -41,5 +41,5 @@ UniformWrapper<T> Shader::getUniform(const char* name)
 	use();
 	GLint loc = glGetUniformLocation(m_program, name);
 	if (loc == -1) LOG_ERROR(boost::str(boost::format("Uniform not found: %s") % name));
-	return UniformWrapper<T>(getContext(), loc);
+	return UniformWrapper<T>(getContext(), loc, this);
 }

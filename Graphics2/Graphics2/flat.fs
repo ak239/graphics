@@ -34,6 +34,7 @@ uniform float diffusePower;
 
 uniform vec3  specularColor;
 uniform float specularPower;
+uniform samplerCube gCubemapTexture;
 
 void main(){
 	if (fillType != ftPerFragment)
@@ -43,21 +44,21 @@ void main(){
 		vec3 n1 = normalize(n);
 		vec3 v1 = normalize(v);
 		vec3 l1 = normalize(l);
+		vec3 cubeColor = texture(gCubemapTexture, -l1).xyz;
 		if (modelType == mtPhong)
 		{
-			vec3 r = reflect(-v1, n1);
+			vec3 r = reflect(v1, n1);
 			vec3 ambient  = ambientColor;
-			vec3 diffuse  = diffuseColor * max(dot(n1, l1),0.0);
-			vec3 specular = specularColor * pow(max(dot(l1, r), 0.0), specularPower);
-			
+			vec3 diffuse  = cubeColor * max(dot(n1, l1),0.0);
+			vec3 specular = cubeColor * pow(max(dot(l1, r), 0.0), specularPower);
 			color = vec4(ambient + (diffuse + specular) / d / d, 1.0f);			
 		}
 		else
 		{
 			vec3 h1 = normalize(h);
 			vec3 ambient  = ambientColor;
-			vec3 diffuse  = diffuseColor * max(dot(n1, l1),0.0);
-			vec3 specular = specularColor * pow(max(dot(n1, h1), 0.0), specularPower);
+			vec3 diffuse  = cubeColor * max(dot(n1, l1),0.0);
+			vec3 specular = cubeColor * pow(max(dot(n1, h1), 0.0), specularPower);
 			
 			color = vec4(ambient + (diffuse + specular) / d / d, 1.0f);		
 		}

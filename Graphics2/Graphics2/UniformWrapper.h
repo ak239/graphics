@@ -3,6 +3,10 @@
 #include "stdafx.h"
 #include "Object.h"
 
+class Shader;
+
+void useShader(Shader* shader);
+
 template<class T>
 class UniformWrapper : public Object
 {
@@ -11,14 +15,15 @@ public:
 	UniformWrapper(GLuint _location) : 
 		Object(), location(_location){}
 
-	UniformWrapper(GLContext _context, GLuint _location) : 
-		Object(_context), location(_location){}
+	UniformWrapper(GLContext _context, GLuint _location, Shader* _shader) : 
+		Object(_context), location(_location), shader_(_shader){}
 
 	const T& getValue() const{ return val; }
 
 	void setValue(const T& _val){
 		GLContextGetter get(getContext());
 		val = _val;
+		useShader(shader_);
 		syncValue();
 	}
 
@@ -27,6 +32,7 @@ private:
 
 	T      val;
 	GLuint location;
+	Shader* shader_;
 };
 
 template<>

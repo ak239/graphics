@@ -37,6 +37,16 @@ const glm::vec3& RenderObject::getCameraPos() const
 	return m_camPos;
 }
 
+void RenderObject::setScale(const glm::vec3& scale)
+{
+	m_scale = scale;
+}
+	
+const glm::vec3& RenderObject::getScale() const
+{
+	return m_scale;
+}
+
 void RenderObject::setPosition(const glm::vec3& position)
 {
 	m_position = position;
@@ -49,5 +59,5 @@ const glm::vec3& RenderObject::getPosition() const
 
 glm::mat4 RenderObject::getModel()
 {
-	return glm::translate(m_position) * glm::mat4(1.0f);
+	return glm::translate(m_position) * glm::scale(m_scale) * glm::mat4(1.0f);
 }
