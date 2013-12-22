@@ -1,6 +1,8 @@
 #include "GL.h"
 #include "Scene.h"
 
+//#include <FTGL/ftgl.h>
+
 void Scene::reshape(int width, int height)
 {
 	GET_CONTEXT();
@@ -37,6 +39,12 @@ void Scene::display()
 		m_objects[i]->setProjection(projection);
 		m_objects[i]->render();
 	}
+
+	//FTGLPixmapFont font("28_Days_Later_Cyr.ttf");
+
+	//font.FaceSize(72);
+	//font.CharMap(FT_ENCODING_UNICODE);
+	//font.Render(L"œ–»¬≈“ Ã»–");
 
 	TwDraw();
 	glutSwapBuffers();

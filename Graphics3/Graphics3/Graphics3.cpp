@@ -17,6 +17,8 @@
 #include "Sphere.h"
 #include "Cube.h"
 
+
+
 MouseCamera mouseCamera;
 GLint       LastTime;
 bool IsLeftButton  = false;
@@ -41,6 +43,8 @@ GLint startTime = 0;
 void __stdcall rerun(void* data);
 
 const string BasePoint     = "Base Point";
+const string FromColorStr  = "From color";
+const string ToColorStr    = "To color";
 const string BaseVelocity  = "Base Velocity";
 const string ParticleCount = "Particle Count";
 const string OneCycleTime  = "One Cycle Time";
@@ -60,10 +64,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	bar = new Bar("Settings");
 	MouseSpeed = bar->addVar("Mouse speed", 0.001f);
 	bar->addVar("Size", 0.5f);
+	bar->addVar<vec3, Color>(FromColorStr, vec3(1.0, 1.0, 1.0));
+	bar->addVar<vec3, Color>(ToColorStr, vec3(1.0, 1.0, 1.0));
+
+	bar->addVar<vec3, Position>(BasePoint, vec3(0.0, 0.0, 0.0));
 	bar->addVar<vec3, Position>(BasePoint, vec3(0.0, 0.0, 0.0));
 	bar->addVar<vec3, Dir>(BaseVelocity, vec3(0.0, 0.3, 0.0));
 	bar->addVar(ParticleCount, 300);
-	bar->addVar(OneCycleTime, 3600.0f);
+	bar->addVar(OneCycleTime, 7000.0f);
 	bar->addVar(BaseRadius,    0.1f);
 	bar->addVar(ScatterOfVelocity, 0.05f);
 	bar->addButton("Rerun", rerun);
@@ -106,6 +114,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cubeShader.use();
 	cubeShader.getUniform<GLuint>("textureSampler").setValue(1);
+
+	// Create a pixmap font from a TrueType file.
 
 	//Shader carcas(wnd.getContext());
 	//carcas.loadFromFile("carcas", Shader::Vertex | Shader::Fragment | Shader::Geometry);
@@ -156,6 +166,7 @@ void keyboardFunc(unsigned char key, int x, int y)
 
 void motionFunc(int x, int y)
 {
+	if (TwEventMouseMotionGLUT(x, y)) return;
 	int halfXWindow = glutGet(GLUT_WINDOW_WIDTH) / 2;
 	int halfYWindow = glutGet(GLUT_WINDOW_HEIGHT) / 2;
 
@@ -170,7 +181,7 @@ void motionFunc(int x, int y)
 		GLfloat deltaHor = 0.0f;
 		if (IsLeftButton) deltaHor = (*MouseSpeed) * deltaTime * float(halfXWindow - x );
 		GLfloat deltaVer = 0.0f;
-		if (IsLeftButton) deltaVer = (*MouseSpeed) * deltaTime * float(halfYWindow - y );
+		if (IsRightButton) deltaVer = (*MouseSpeed) * deltaTime * float(halfYWindow - y );
 
 		if (std::abs(deltaHor) > 0.03f) deltaHor = 0.03f * (deltaHor > 0.0 ? 1 : -1);
 		if (std::abs(deltaVer) > 0.03f) deltaVer = 0.03f * (deltaVer > 0.0 ? 1 : -1);
@@ -179,8 +190,6 @@ void motionFunc(int x, int y)
 
 		glutWarpPointer(halfXWindow, halfYWindow);
 	}
-
-	TwEventMouseMotionGLUT(x, y);
 }
 
 void timerFunc(int value)
@@ -213,8 +222,6 @@ void mouseFunc(int button, int state, int x, int y)
 	if (button == 4)
 		mouseCamera.setDist(mouseCamera.getDist() - 0.05f);
 
-
-
 	TwEventMouseButtonGLUT(button, state, x, y);
 }
 
@@ -227,7 +234,8 @@ void __stdcall rerun(void* data)
 
 	Emitter emitter(*bar->getVar<vec3>(BasePoint), *bar->getVar<vec3>(BaseVelocity),
 		*bar->getVar<GLint>(ParticleCount), *bar->getVar<GLfloat>(OneCycleTime),
-		*bar->getVar<GLfloat>(BaseRadius), *bar->getVar<GLfloat>(ScatterOfVelocity));
+		*bar->getVar<GLfloat>(BaseRadius), *bar->getVar<GLfloat>(ScatterOfVelocity),
+		*bar->getVar<vec3>(FromColorStr), *bar->getVar<vec3>(ToColorStr));
 
 	pariclesPointer->setData(&emitter);
 }

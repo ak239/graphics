@@ -24,6 +24,7 @@ private:
 	ArrayStaticBuffer<vec3>    particles_;
 	ArrayStaticBuffer<vec3>    velocities_;
 	ArrayStaticBuffer<GLfloat> startTimes_;
+	ArrayStaticBuffer<vec3>    colors_;
 
 	Shader*  shader_;
 	Texture* texture_;

@@ -33,6 +33,7 @@ void Particles::setData(Emitter* emitter)
 	particles_.bufferData( emitter->particles());
 	velocities_.bufferData(emitter->velocities());
 	startTimes_.bufferData(emitter->startTimes());
+	colors_.bufferData(emitter->colors());
 }
 
 
@@ -54,6 +55,7 @@ void Particles::renderImpl()
 	VertexAttribArray<vec3>    vertexesAttrib(  particles_,  0);
 	VertexAttribArray<vec3>    velocitiesAttrib(velocities_, 1);
 	VertexAttribArray<GLfloat> startTimesAttrib(startTimes_, 2);
+	VertexAttribArray<vec3>    colorsAttrib(    colors_,     3);
 
 	glDrawArrays(GL_POINTS, 0, particles_.count());
 

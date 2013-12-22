@@ -4,11 +4,15 @@ layout(points) in;
 layout(triangle_strip, max_vertices=4) out;
 
 out vec2 texCoord;
+out vec3 particleColor;
+out float fsCurrentStage;
 
 uniform vec3  cameraPos;
 uniform float size;
 
 varying int   textureIndex[];
+varying vec3  currentColor[];
+varying float currentStage[];
 
 void main()
 {
@@ -24,22 +28,30 @@ void main()
 		vec4 Pos = vec4(gl_in[i].gl_Position.xyz - (right * 0.5 * size) - up * 0.5 * size, gl_in[i].gl_Position.w);
 		gl_Position = Pos;
 		texCoord = vec2(row * 0.25, 1.0 - col * 0.25);
+		particleColor = currentColor[i];
+		fsCurrentStage = currentStage[i];
     EmitVertex();
 		
 		Pos.y += size;
 		gl_Position = Pos;
 		texCoord = vec2(row * 0.25, 1.0 - (col + 1) * 0.25);
+		particleColor = currentColor[i];
+		fsCurrentStage = currentStage[i];
     EmitVertex();
 		
 		Pos.x += size;
 		Pos.y -= size;
 		gl_Position = Pos;
 		texCoord = vec2((row + 1) * 0.25, 1.0 - col * 0.25);
+		particleColor = currentColor[i];
+		fsCurrentStage = currentStage[i];
     EmitVertex();
 		
 		Pos.y += size;
 		gl_Position = Pos;
 		texCoord = vec2((row + 1) * 0.25, 1.0 - (col + 1) * 0.25);
+		particleColor = currentColor[i];
+		fsCurrentStage = currentStage[i];
     EmitVertex();
 
 		EndPrimitive();

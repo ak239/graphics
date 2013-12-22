@@ -3,7 +3,8 @@
 
 
 Emitter::Emitter(const vec3& basePoint, const vec3& baseVelocity, size_t count,
-		GLfloat oneCycleTime, GLfloat baseRadius, GLfloat scatterOfVelocity)
+		GLfloat oneCycleTime, GLfloat baseRadius, GLfloat scatterOfVelocity,
+		const vec3& fromColor, const vec3& toColor)
 {
 	for (size_t i = 0; i < count; ++i)
 	{
@@ -11,5 +12,6 @@ Emitter::Emitter(const vec3& basePoint, const vec3& baseVelocity, size_t count,
 		particles_.push_back(vec3(basePoint.x + point.x, basePoint.y, basePoint.z + point.z));
 		velocities_.push_back(baseVelocity + glm::ballRand(scatterOfVelocity));
 		startTimes_.push_back(glm::linearRand(0.0f, oneCycleTime));
+		color_.push_back(glm::linearRand(fromColor, toColor));
 	}
 }

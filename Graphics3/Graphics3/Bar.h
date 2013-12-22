@@ -8,6 +8,7 @@ using std::map;
 
 struct Position{};
 struct Dir{};
+struct Color{};
 struct Default{};
 
 class Bar
@@ -77,6 +78,12 @@ template<>
 inline void Bar::registerVar<vec3, Dir>(const string& name, vec3* var)
 {
 	TwAddVarRW(bar_, name.c_str(), TW_TYPE_DIR3F, var, "");
+}
+
+template<>
+inline void Bar::registerVar<vec3, Color>(const string& name, vec3* var)
+{
+	TwAddVarRW(bar_, name.c_str(), TW_TYPE_COLOR3F, var, "");
 }
 
 template<>

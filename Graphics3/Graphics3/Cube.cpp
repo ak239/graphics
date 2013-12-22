@@ -57,11 +57,8 @@ void Cube::setShader(Shader* _shader)
 	if (m_shader)
 	{
 		m_shader->use();
-		std::cout << std::hex << glGetError()  << std::endl;
 		m_MV   = m_shader->getUniform<glm::mat4>("MV");
-		std::cout << std::hex << glGetError()  << std::endl;
 		m_P    = m_shader->getUniform<glm::mat4>("P");
-		std::cout << std::hex << glGetError()  << std::endl;
 	}
 }
 

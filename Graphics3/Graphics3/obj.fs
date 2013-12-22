@@ -7,6 +7,6 @@ uniform samplerCube textureSampler;
 
 void main(){
 //	color = vec4(vec3(UV.y), 1.0f);
-  color = texture( textureSampler, UVW);
+  color = texture( textureSampler, normalize(UVW));
 	color.w = 1.0f;
 }
