@@ -46,7 +46,7 @@ void Texture::active()
 void Texture::activeAndBind()
 {
 	glActiveTexture(m_textureUnit);
-	glBindTexture( GL_TEXTURE_2D, m_textureID);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
 }
 
 void Texture::setWrap(GLint wrapType)
@@ -66,4 +66,35 @@ void Texture::setMagFilter(GLint filter)
 {
 	active();
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter );
+}
+
+Texture1D::Texture1D(void) : m_textureID(-1){}
+
+Texture1D::~Texture1D(void){}
+
+bool Texture1D::loadFromFile(const string& fileName)
+{
+	nv::Image img;
+	if (!img.loadImageFromFile(fileName.c_str()))
+		return false;
+
+	GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_1D, textureID);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage1D( GL_TEXTURE_1D, 0, img.getInternalFormat(), img.getWidth(), 0, img.getFormat(), img.getType(), img.getLevel(0));
+	glGenerateMipmap(GL_TEXTURE_1D);
+
+	return true;
+}
+
+void Texture1D::active(GLint textureUnit)
+{
+	glActiveTexture(textureUnit);
+}
+
+void Texture1D::bind(GLint textureUnit)
+{
+	glBindTexture(GL_TEXTURE_1D, m_textureID);
 }

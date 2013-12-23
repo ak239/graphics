@@ -93,6 +93,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	UniformWrapper<GLuint> TextureID  = objShader.getUniform<GLuint>("textureSampler");
 	TextureID.setValue(0);
 
+	Texture1D colorTex;
+	if (!colorTex.loadFromFile("images.dds"))
+		std::cout << "error!" << std::endl;
+	colorTex.active(GL_TEXTURE1);
+	colorTex.bind(GL_TEXTURE1);
+	UniformWrapper<GLuint> TextureColorID  = objShader.getUniform<GLuint>("colorSampler");
+	TextureColorID.setValue(1);
+
 	Particles p(wnd.getContext());
 	pariclesPointer = &p;
 	p.setShader(&objShader);

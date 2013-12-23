@@ -29,11 +29,12 @@ GlutApp::GlutApp(int argc, _TCHAR* argv[], const char* appName)
 	mainWindowId = windowId;
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable (GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_1D);
 
 	glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 

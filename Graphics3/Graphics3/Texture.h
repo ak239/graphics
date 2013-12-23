@@ -27,3 +27,19 @@ private:
 	GLint  m_textureUnit;
 };
 
+class Texture1D
+{
+public:
+	Texture1D(void);
+	~Texture1D(void);
+
+	virtual bool loadFromFile(const string& fileName);
+
+	GLuint textureID() const{ return m_textureID; }
+
+	void active(GLint textureUnit);
+	void bind(GLint textureUnit);
+
+private:
+	GLuint m_textureID;
+};

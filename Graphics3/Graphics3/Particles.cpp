@@ -51,6 +51,8 @@ void Particles::renderImpl()
 	glDisable(GL_DEPTH_TEST);
 
 	texture_->activeAndBind();
+	color_->active(GL_TEXTURE1);
+	color_->bind(GL_TEXTURE1);
 
 	VertexAttribArray<vec3>    vertexesAttrib(  particles_,  0);
 	VertexAttribArray<vec3>    velocitiesAttrib(velocities_, 1);
@@ -67,4 +69,9 @@ void Particles::renderImpl()
 void Particles::setTexture(Texture* _texture)
 {
 	texture_ = _texture;
+}
+
+void Particles::setColorTexture(Texture1D* _texture)
+{
+	color_ = _texture;
 }
