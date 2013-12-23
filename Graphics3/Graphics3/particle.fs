@@ -21,5 +21,5 @@ void main(){
 	// get one coordinate to alpha and mul this to sin
 	color.w = (tmp1.x * fsCurrentStage + tmp2.x * (1 - fsCurrentStage)) * sin(fsCurrentStage * 3.14159265);
 	
-	color = vec4(vec3(col.x), 1);
+	//color = vec4(vec3(col.x), 1);
 }

@@ -80,6 +80,7 @@ bool Texture1D::loadFromFile(const string& fileName)
 
 	GLuint textureID;
     glGenTextures(1, &textureID);
+	glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_1D, textureID);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
