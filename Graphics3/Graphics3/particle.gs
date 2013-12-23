@@ -10,9 +10,9 @@ out float fsCurrentStage;
 uniform vec3  cameraPos;
 uniform float size;
 
-varying int   textureIndex[];
-varying vec3  currentColor[];
-varying float currentStage[];
+in int   textureIndex[];
+in vec3  currentColor[];
+in float currentStage[];
 
 void main()
 {

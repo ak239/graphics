@@ -11,9 +11,9 @@ uniform mat4  P;
 uniform float time;
 uniform float cycleTime;
 
-varying int   textureIndex;
-varying vec3  currentColor;
-varying float currentStage;
+out int   textureIndex;
+out vec3  currentColor;
+out float currentStage;
 
 void main()
 {
