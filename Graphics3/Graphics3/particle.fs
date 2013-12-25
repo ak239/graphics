@@ -18,7 +18,7 @@ void main(){
 	if (nextTexCoord.x > 1.0f)
 		tmp2 = vec3(0.0f);
 	vec3 col  = texture(colorSampler, fsCurrentStage).xyz;
-	color.xyz = (tmp1.xyz * fsCurrentStage + tmp2.xyz * (1 - fsCurrentStage)) * col;
+	color.xyz = col;
 
 	float curStageValue = mod(fsCurrentStage, 1.0 / 16);
 	// get one coordinate to alpha and mul this to sin

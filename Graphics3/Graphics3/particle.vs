@@ -38,8 +38,8 @@ void main()
 		textureIndex = 0;
 		
 	currentColor = color;
-	float baseSize = size.x * (1 - currentStage) + size.y * currentStage;
-	curSize = baseSize * pow(currentStage, A);
+	curSize = size.x + (size.y - size.x) * pow(currentStage, pow(10, A));
+	//curSize = baseSize * pow(currentStage, A);
 	
   gl_Position = P * V * (worldPosition + vec4(s, 0.0));	
 }
