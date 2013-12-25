@@ -28,6 +28,9 @@ private:
 	ArrayStaticBuffer<GLfloat> startTimes_;
 	ArrayStaticBuffer<vec3>    colors_;
 
+	ArrayStaticBuffer<vec2>    sizes_;
+	ArrayStaticBuffer<GLfloat> A_;
+
 	Shader*  shader_;
 	Texture* texture_;
 	Texture1D* color_;

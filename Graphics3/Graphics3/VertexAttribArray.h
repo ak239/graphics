@@ -34,6 +34,12 @@ VertexAttribArray<VertexType>::~VertexAttribArray()
 }
 
 template<>
+inline void VertexAttribArray<vec2>::setPointer(const ArrayStaticBuffer<vec2>& _buffer)
+{
+	glVertexAttribPointer(index_, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+}
+
+template<>
 inline void VertexAttribArray<vec3>::setPointer(const ArrayStaticBuffer<vec3>& _buffer)
 {
 	glVertexAttribPointer(index_, 3, GL_FLOAT, GL_FALSE, 0, nullptr);

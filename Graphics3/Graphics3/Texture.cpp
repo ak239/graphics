@@ -87,6 +87,8 @@ bool Texture1D::loadFromFile(const string& fileName)
 	glTexImage1D( GL_TEXTURE_1D, 0, img.getInternalFormat(), img.getWidth(), 0, img.getFormat(), img.getType(), img.getLevel(0));
 	glGenerateMipmap(GL_TEXTURE_1D);
 
+	m_textureID = textureID;
+
 	return true;
 }
 

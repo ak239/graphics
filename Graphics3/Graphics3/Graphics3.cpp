@@ -17,8 +17,6 @@
 #include "Sphere.h"
 #include "Cube.h"
 
-
-
 MouseCamera mouseCamera;
 GLint       LastTime;
 bool IsLeftButton  = false;
@@ -50,6 +48,9 @@ const string ParticleCount = "Particle Count";
 const string OneCycleTime  = "One Cycle Time";
 const string BaseRadius    = "Base radius";
 const string ScatterOfVelocity = "Scatter of velocity";
+const string FromSizeStr = "From Particle Size";
+const string ToSizeStr   = "To Particle Size";
+const string SizeAStr   = "Size A";
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -63,7 +64,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	bar = new Bar("Settings");
 	MouseSpeed = bar->addVar("Mouse speed", 0.001f);
-	bar->addVar("Size", 0.5f);
+	//bar->addVar("Size", 0.5f);
 	bar->addVar<vec3, Color>(FromColorStr, vec3(1.0, 1.0, 1.0));
 	bar->addVar<vec3, Color>(ToColorStr, vec3(1.0, 1.0, 1.0));
 
@@ -74,6 +75,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	bar->addVar(OneCycleTime, 7000.0f);
 	bar->addVar(BaseRadius,    0.1f);
 	bar->addVar(ScatterOfVelocity, 0.05f);
+	bar->addVar(FromSizeStr, 0.1f);
+	bar->addVar(ToSizeStr,   1.0f);
+	bar->addVar(SizeAStr,    0.2f);
 	bar->addButton("Rerun", rerun);
 
 	mouseCamera.setDist(3.0f);
@@ -105,6 +109,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	pariclesPointer = &p;
 	p.setShader(&objShader);
 	p.setTexture(&billboard);
+	p.setColorTexture(&colorTex);
 
 	Shader cubeShader(wnd.getContext());
 	cubeShader.loadFromFile("obj", Shader::Vertex | Shader::Fragment);
@@ -206,7 +211,7 @@ void timerFunc(int value)
 
 	cameraPosUniform.getShader()->use();
 	cameraPosUniform.setValue(mouseCamera.getPos());
-	sizeUniform.setValue(*bar->getVar<GLfloat>("Size"));
+	//sizeUniform.setValue(*bar->getVar<GLfloat>("Size"));
 	timeUniform.setValue(timeSinceStart);
 
 	glutPostRedisplay();
@@ -243,7 +248,9 @@ void __stdcall rerun(void* data)
 	Emitter emitter(*bar->getVar<vec3>(BasePoint), *bar->getVar<vec3>(BaseVelocity),
 		*bar->getVar<GLint>(ParticleCount), *bar->getVar<GLfloat>(OneCycleTime),
 		*bar->getVar<GLfloat>(BaseRadius), *bar->getVar<GLfloat>(ScatterOfVelocity),
-		*bar->getVar<vec3>(FromColorStr), *bar->getVar<vec3>(ToColorStr));
+		*bar->getVar<vec3>(FromColorStr), *bar->getVar<vec3>(ToColorStr),
+		vec2(*bar->getVar<GLfloat>(FromSizeStr), *bar->getVar<GLfloat>(ToSizeStr)),
+		*bar->getVar<GLfloat>(SizeAStr));
 
 	pariclesPointer->setData(&emitter);
 }
