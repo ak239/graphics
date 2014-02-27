@@ -25,6 +25,7 @@ const char *FRAGMENT_NAME = "vol.fs";
 const char *SETTINGS_BAR = "settings";
 const char *TURBULENCE_COUNT = "turbulence sum count";
 const char *STEP_SIZE = "step size";
+const char *INIT_FREQ = "init freq";
 
 const unsigned char KEY_ESCAPE = 27;
 const int TIMER_POST_REDISPLAY = 1;
@@ -54,14 +55,17 @@ GLuint MVPloc = 0;
 mat4 MVP;
 GLuint camLoc = 0;
 
+GLfloat initFreq = 0.5f;
+GLuint  initFreqLoc = 0;
+
 bool IsLeftButton  = false;
 bool IsRightButton = false;
 GLint LastTime = 0;
 
-GLfloat Dist    = 5.0f;
+GLfloat Dist    = 10.0f;
 GLfloat MouseSpeed = 0.001f;
 
-vec3 camPos(0.0f, 0.0f, 5.0f);
+vec3 camPos(0.0f, 0.0f, Dist);
 glm::quat curCamRot = glm::normalize(glm::quat());
 mat4 View();
 
@@ -101,6 +105,7 @@ int main(int argc, char* argv[])
 	camLoc = glGetUniformLocation(Program, "camPos");
 	turbulenceLoc = glGetUniformLocation(Program, "turbulenceCount");
 	stepSizeLoc = glGetUniformLocation(Program, "stepSize");
+	initFreqLoc = glGetUniformLocation(Program, "initFreq");
 
 	// create frame counter font
 	FTGLPixmapFont font(FONT_FILE);
@@ -122,6 +127,7 @@ int main(int argc, char* argv[])
 	TwBar* bar = TwNewBar(SETTINGS_BAR);
 	TwAddVarRW(bar, TURBULENCE_COUNT, TW_TYPE_INT32, &turbulenceCount, "");
 	TwAddVarRW(bar, STEP_SIZE, TW_TYPE_FLOAT, &stepSize, "");
+	TwAddVarRW(bar, INIT_FREQ, TW_TYPE_FLOAT, &initFreq, "");
 
 	timerFunc(TIMER_POST_REDISPLAY);
 	while (!IsTerminate)
@@ -178,6 +184,7 @@ void displayFunc()
 	glUniform3f(camLoc, camReal.x, camReal.y, camReal.z);
 	glUniform1i(turbulenceLoc, turbulenceCount);
 	glUniform1f(stepSizeLoc, stepSize);
+	glUniform1f(initFreqLoc, initFreq);
 
 	drawCube(CubeVertexBuffer);
 
@@ -244,11 +251,12 @@ void mouseFunc(int button, int state, int x, int y)
 	if (button == 3)
 	{
 		Dist += 0.5f;
-
+		camPos = vec3(0.0f, 0.0f, Dist);
 	}
 	if (button == 4)
 	{
 		Dist -= 0.5f;
+		camPos = vec3(0.0f, 0.0f, Dist);
 	}
 
 	TwEventMouseButtonGLUT(button, state, x, y);

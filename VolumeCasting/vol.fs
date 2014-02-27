@@ -43,10 +43,6 @@ float snoise(vec3 v)
   vec3 i1 = min( g.xyz, l.zxy );
   vec3 i2 = max( g.xyz, l.zxy );
 
-  //   x0 = x0 - 0.0 + 0.0 * C.xxx;
-  //   x1 = x0 - i1  + 1.0 * C.xxx;
-  //   x2 = x0 - i2  + 2.0 * C.xxx;
-  //   x3 = x0 - 1.0 + 3.0 * C.xxx;
   vec3 x1 = x0 - i1 + C.xxx;
   vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y
   vec3 x3 = x0 - D.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y
@@ -102,86 +98,31 @@ float snoise(vec3 v)
   return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
                                 dot(p2,x2), dot(p3,x3) ) );
 }
-  
-// from : http://stackoverflow.com/questions/15095909/from-rgb-to-hsv-in-opengl-glsl
-vec3 rgb2hsv(vec3 c)
-{
-    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
-
-    float d = q.x - min(q.w, q.y);
-    float e = 1.0e-10;
-    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-}
-
-vec3 hsv2rgb(vec3 c)
-{
-    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-float HueToRGB(float f1, float f2, float hue)
-{
-if (hue < 0.0)
-hue += 1.0;
-else if (hue > 1.0)
-hue -= 1.0;
-float res;
-if ((6.0 * hue) < 1.0)
-res = f1 + (f2 - f1) * 6.0 * hue;
-else if ((2.0 * hue) < 1.0)
-res = f2;
-else if ((3.0 * hue) < 2.0)
-res = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;
-else
-res = f1;
-return res;
-}
-
-vec3 hsl2rgb(vec3 hsl)
-{
-vec3 rgb;
-
-if (hsl.y == 0.0)
-rgb = vec3(hsl.z); // Luminance
-else
-{
-float f2;
-
-if (hsl.z < 0.5)
-f2 = hsl.z * (1.0 + hsl.y);
-else
-f2 = (hsl.z + hsl.y) - (hsl.y * hsl.z);
-
-float f1 = 2.0 * hsl.z - f2;
-
-rgb.r = HueToRGB(f1, f2, hsl.x + (1.0/3.0));
-rgb.g = HueToRGB(f1, f2, hsl.x);
-rgb.b= HueToRGB(f1, f2, hsl.x - (1.0/3.0));
-}
-
-return rgb;
-}
-
 
 uniform int turbulenceCount;
 
+uniform float initFreq;
+
 float turbulence(in vec3 v) {
-  vec3 freq = vec3(1.0);
+  vec3 freq = vec3(initFreq);
   float sum = 0.0;
   for (int i = 0; i < turbulenceCount; i++) {
-    sum += snoise(freq*v)/freq.x;
+    sum += snoise(freq*v) / freq.x;
     freq *= vec3(2.0);
   }
-  return sum;
+  
+  // must be 2^n / 2^n - 1;
+  //sum *= freq.x / (freq.x - 1);
+  return sum * 0.5 + 0.5;
 }
 
 out vec4 color;
 in vec3 vPos;
 uniform vec3 camPos;
 uniform float stepSize;
+
+const float Z_WIDTH = 0.4;
+const float XY_WIDTH = 10.0;
 
 void main(){
 	vec3 dir   = normalize(vPos - camPos);
@@ -203,13 +144,13 @@ void main(){
 		float t = turbulence(curPos);
 		vec3 color_sample = vec3(1.0f, 1.0f, 1.0f);
 		float alpha_sample = t * delta;
-		col += (1.0 - alpha_acc) * color_sample * alpha_sample * 5.0;
-		alpha_acc += alpha_sample;
+		col += (1.0 - alpha_acc) * color_sample * alpha_sample * 1.0;
+		alpha_acc += alpha_sample * 0.8;
 		curPos += step;
 		if (alpha_acc > 1.0){ col.a = 1.0; break; }
-		if (abs(curPos.x) > 1.0f || abs(curPos.y) > 1.0f || abs(curPos.z) > 1.0f) break;
+		if (abs(curPos.x) > XY_WIDTH || abs(curPos.y) > Z_WIDTH || abs(curPos.z) > XY_WIDTH) break;
 	}
 	
 	col.a = alpha_acc;
-	color = col;
+	color = vec4(1.0, 1.0, 1.0, alpha_acc);
 }
