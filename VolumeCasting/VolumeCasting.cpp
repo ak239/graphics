@@ -20,12 +20,45 @@ const char *ERROR_FTGL_FORMAT = "Font Error: %d\n";
 const char *FONT_FILE = "fontana.ttf";
 
 const char *VERTEX_NAME   = "vol.vs";
-const char *FRAGMENT_NAME = "vol.fs";
+const char *FRAGMENT_NAME = "vol3.fs";
 
 const char *SETTINGS_BAR = "settings";
 const char *TURBULENCE_COUNT = "turbulence sum count";
 const char *STEP_SIZE = "step size";
 const char *INIT_FREQ = "init freq";
+const char *CAM_POS = "camera position";
+
+#define DEF_UNIFORM_FLOAT_VAR(name, d) \
+	const char* name##_VAR = #name; \
+	GLfloat name##_val = d; \
+	GLuint name##_loc = 0; 
+
+#define ADD_UNIFORM_FLOAT_TO_BAR(name, def) \
+	TwAddVarRW(bar, name##_VAR, TW_TYPE_FLOAT, &name##_val, "");
+
+#define GET_UNIFORM_LOC(name, def) \
+	name##_loc = glGetUniformLocation(Program, name##_VAR);
+
+#define UPDATE_FLOAT_UNIFORM(name, def) \
+	glUniform1f(name##_loc, name##_val);
+
+#define FOR_FLOAT_VARS(DO) \
+	DO(FX0, 1.0) \
+	DO(FY0, 1.0) \
+	DO(C0,  0.3) \
+	DO(T0,  0.4) \
+	DO(k,   0.2) \
+	DO(PX0, 1.0) \
+	DO(PY0, 1.0) \
+	DO(n,   4.0) \
+	DO(T1,  1.0) \
+	DO(T2,  1.0) \
+	DO(D,   1.0) \
+	DO(Fmax, 1.0) \
+	DO(a1, 0.07) \
+	DO(a2, 1.0)
+
+FOR_FLOAT_VARS(DEF_UNIFORM_FLOAT_VAR);
 
 const unsigned char KEY_ESCAPE = 27;
 const int TIMER_POST_REDISPLAY = 1;
@@ -40,11 +73,6 @@ void mouseFunc(int button, int state, int x, int y);
 
 void deinitAll();
 void displayFrameCount();
-
-/*
-TODO:
-load 3d texture
-*/
 
 bool IsTerminate = false;
 FTGLPixmapFont *FrameCounterFont = nullptr;
@@ -69,10 +97,12 @@ vec3 camPos(0.0f, 0.0f, Dist);
 glm::quat curCamRot = glm::normalize(glm::quat());
 mat4 View();
 
-GLint  turbulenceCount = 3;
+GLint  turbulenceCount = 2;
 GLuint turbulenceLoc = 0;
 GLfloat stepSize = 2.0 / 50.0;
 GLuint stepSizeLoc = 0;
+
+vec3 curCamPos;
 
 int main(int argc, char* argv[])
 {
@@ -88,7 +118,8 @@ int main(int argc, char* argv[])
 	atexit(&deinitAll);
 
 	// init glut/GL vars
-	glClearColor(135.0f/255.0f, 206.0f/255.0f, 235.0f/255.0f, 1.0f);
+	//glClearColor(135.0f/255.0f, 206.0f/255.0f, 235.0f/255.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glutReshapeWindow(1024, 768);
 	glViewport(0,0,1024,768);
 	glEnable(GL_DEPTH_TEST);
@@ -101,11 +132,14 @@ int main(int argc, char* argv[])
 
 	// load program
 	Program = loadShaders(VERTEX_NAME, FRAGMENT_NAME);
+
 	MVPloc = glGetUniformLocation(Program, "MVP");
 	camLoc = glGetUniformLocation(Program, "camPos");
 	turbulenceLoc = glGetUniformLocation(Program, "turbulenceCount");
 	stepSizeLoc = glGetUniformLocation(Program, "stepSize");
 	initFreqLoc = glGetUniformLocation(Program, "initFreq");
+	
+	FOR_FLOAT_VARS(GET_UNIFORM_LOC);	
 
 	// create frame counter font
 	FTGLPixmapFont font(FONT_FILE);
@@ -128,6 +162,9 @@ int main(int argc, char* argv[])
 	TwAddVarRW(bar, TURBULENCE_COUNT, TW_TYPE_INT32, &turbulenceCount, "");
 	TwAddVarRW(bar, STEP_SIZE, TW_TYPE_FLOAT, &stepSize, "");
 	TwAddVarRW(bar, INIT_FREQ, TW_TYPE_FLOAT, &initFreq, "");
+	TwAddVarRO(bar, CAM_POS,   TW_TYPE_DIR3F, &curCamPos.x, "");
+
+	FOR_FLOAT_VARS(ADD_UNIFORM_FLOAT_TO_BAR);
 
 	timerFunc(TIMER_POST_REDISPLAY);
 	while (!IsTerminate)
@@ -185,6 +222,8 @@ void displayFunc()
 	glUniform1i(turbulenceLoc, turbulenceCount);
 	glUniform1f(stepSizeLoc, stepSize);
 	glUniform1f(initFreqLoc, initFreq);
+
+	FOR_FLOAT_VARS(UPDATE_FLOAT_UNIFORM);
 
 	drawCube(CubeVertexBuffer);
 
@@ -276,5 +315,6 @@ void displayFrameCount()
 
 mat4 View()
 {
-	return glm::lookAt(camPos * curCamRot, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	curCamPos = camPos * curCamRot;
+	return glm::lookAt(curCamPos, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 }

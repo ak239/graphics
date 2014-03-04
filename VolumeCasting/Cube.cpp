@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-const GLfloat Z_WIDTH = 0.4;
+const GLfloat Z_WIDTH = 3.0;
 const GLfloat XY_WIDTH = 10.0;
 
 static const GLfloat VertexBufferData[] = {
