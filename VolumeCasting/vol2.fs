@@ -97,9 +97,14 @@ out vec4 color;
 in vec3 vPos;
 uniform vec3 camPos;
 uniform float stepSize;
+uniform float h;
+uniform float kTop;
+uniform float kBot;
+uniform float freq;
+uniform float colKt;
 
-const float Z_WIDTH = 1.0;
-const float XY_WIDTH = 2.0;
+const float Z_WIDTH = 3.0;
+const float XY_WIDTH = 10.0;
 
 void main(){
 	vec3 dir   = normalize(vPos - camPos);
@@ -120,10 +125,10 @@ void main(){
 	
 	while (true)
 	{
-		float top = snoise(curPos.xz * 0.5) * 0.25; //[0 .. 0.5]
-		if (top > 0.0)
+		float top = (snoise(curPos.xz * freq) - h) * kTop + h; 
+		if (top > h)
 		{
-			float bot = -top * 0.25; //[-0.25 .. 0]
+			float bot = h - (top - h ) * kBot; //[-0.25 .. 0]
 			float y = curPos.y;
 			if (top > bot && y < top && y > bot && top - bot > 0.02)
 			{
@@ -131,6 +136,9 @@ void main(){
 				float alpha_sample = top  * 10.0 * delta;
 				col_val += (1.0 - alpha_acc) * color_sample * alpha_sample * 3.0;
 				alpha_acc += alpha_sample;
+				col_val = abs(top - bot) / colKt;
+				alpha_acc = 1.0;
+				break;
 				//col_val = 1.0;
 				//alpha_acc = 1.0;
 			}

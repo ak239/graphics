@@ -124,7 +124,7 @@ uniform float stepSize;
 const float Z_WIDTH = 0.4;
 const float XY_WIDTH = 10.0;
 
-void main(){
+void main(){	
 	vec3 dir   = normalize(vPos - camPos);
 	vec3 start = vPos;
 		

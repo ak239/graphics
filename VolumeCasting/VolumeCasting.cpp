@@ -20,7 +20,7 @@ const char *ERROR_FTGL_FORMAT = "Font Error: %d\n";
 const char *FONT_FILE = "fontana.ttf";
 
 const char *VERTEX_NAME   = "vol.vs";
-const char *FRAGMENT_NAME = "vol3.fs";
+const char *FRAGMENT_NAME = "vol2.fs";
 
 const char *SETTINGS_BAR = "settings";
 const char *TURBULENCE_COUNT = "turbulence sum count";
@@ -43,20 +43,27 @@ const char *CAM_POS = "camera position";
 	glUniform1f(name##_loc, name##_val);
 
 #define FOR_FLOAT_VARS(DO) \
-	DO(FX0, 1.0) \
-	DO(FY0, 1.0) \
-	DO(C0,  0.3) \
-	DO(T0,  0.4) \
-	DO(k,   0.2) \
-	DO(PX0, 1.0) \
-	DO(PY0, 1.0) \
-	DO(n,   4.0) \
-	DO(T1,  1.0) \
-	DO(T2,  1.0) \
-	DO(D,   1.0) \
-	DO(Fmax, 1.0) \
-	DO(a1, 0.07) \
-	DO(a2, 1.0)
+	DO(h, 0.0) \
+	DO(kTop, 1.0) \
+	DO(kBot, 1.0) \
+	DO(freq, 0.5) \
+	DO(colKt, 2.0)
+	//DO(FX0, 1.0) \
+	//DO(FY0, 1.0) \
+	//DO(C0,  0.3) \
+	//DO(T0,  0.4) \
+	//DO(k,   0.2) \
+	//DO(PX0, 1.0) \
+	//DO(PY0, 1.0) \
+	//DO(n,   4.0) \
+	//DO(T1,  1.0) \
+	//DO(T2,  1.0) \
+	//DO(D,   1.0) \
+	//DO(Fmax, 1.0) \
+	//DO(a1, 1.0) \
+	//DO(a2, 1.0) \
+	//DO(screenWidth, 640.0) \
+	//DO(screenHeight, 480.0)
 
 FOR_FLOAT_VARS(DEF_UNIFORM_FLOAT_VAR);
 
@@ -83,7 +90,7 @@ GLuint MVPloc = 0;
 mat4 MVP;
 GLuint camLoc = 0;
 
-GLfloat initFreq = 0.5f;
+GLfloat initFreq = 1.0f;
 GLuint  initFreqLoc = 0;
 
 bool IsLeftButton  = false;
@@ -118,8 +125,8 @@ int main(int argc, char* argv[])
 	atexit(&deinitAll);
 
 	// init glut/GL vars
-	//glClearColor(135.0f/255.0f, 206.0f/255.0f, 235.0f/255.0f, 1.0f);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(135.0f/255.0f, 206.0f/255.0f, 235.0f/255.0f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glutReshapeWindow(1024, 768);
 	glViewport(0,0,1024,768);
 	glEnable(GL_DEPTH_TEST);
