@@ -103,6 +103,10 @@ uniform float kBot;
 uniform float freq;
 uniform float colKt;
 
+uniform float deltaX;
+uniform float deltaY;
+uniform float freq2;
+
 const float Z_WIDTH = 3.0;
 const float XY_WIDTH = 10.0;
 
@@ -125,24 +129,33 @@ void main(){
 	
 	while (true)
 	{
-		float top = (snoise(curPos.xz * freq) - h) * kTop + h; 
-		if (top > h)
+		float top = snoise(curPos.xz * freq);
+		float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
+		float y = curPos.y;
+		if (top - bot > 0 && y < top && y > bot)
 		{
-			float bot = h - (top - h ) * kBot; //[-0.25 .. 0]
-			float y = curPos.y;
-			if (top > bot && y < top && y > bot && top - bot > 0.02)
-			{
-				float color_sample = 1.0;
-				float alpha_sample = top  * 10.0 * delta;
-				col_val += (1.0 - alpha_acc) * color_sample * alpha_sample * 3.0;
-				alpha_acc += alpha_sample;
-				col_val = abs(top - bot) / colKt;
-				alpha_acc = 1.0;
-				break;
-				//col_val = 1.0;
-				//alpha_acc = 1.0;
-			}
+			col_val = abs(top - bot) / colKt;
+			alpha_acc = 1.0;
+			break;
 		}
+		//float top = (snoise(curPos.xz * freq) - h) * kTop + h; 
+		//if (top > h)
+		//{
+		//	float bot = h - (top - h ) * kBot; //[-0.25 .. 0]
+		//	float y = curPos.y;
+		//	if (top > bot && y < top && y > bot && top - bot > 0.02)
+		//	{
+		//		float color_sample = 1.0;
+		//		float alpha_sample = top  * 10.0 * delta;
+		//		col_val += (1.0 - alpha_acc) * color_sample * alpha_sample * 3.0;
+		//		alpha_acc += alpha_sample;
+		//		col_val = abs(top - bot) / colKt;
+		//		alpha_acc = 1.0;
+		//		break;
+		//		//col_val = 1.0;
+		//		//alpha_acc = 1.0;
+		//	}
+		//}
 		curPos += step;
 		if (alpha_acc > 0.9){ col.a = 1.0; break; }
 		if (abs(curPos.x) > XY_WIDTH || abs(curPos.y) > Z_WIDTH || abs(curPos.z) > XY_WIDTH) break;

@@ -47,7 +47,10 @@ const char *CAM_POS = "camera position";
 	DO(kTop, 1.0) \
 	DO(kBot, 1.0) \
 	DO(freq, 0.5) \
-	DO(colKt, 2.0)
+	DO(colKt, 2.0) \
+	DO(deltaX, 0.0) \
+	DO(deltaY, 0.0) \
+	DO(freq2, 0.5)
 	//DO(FX0, 1.0) \
 	//DO(FY0, 1.0) \
 	//DO(C0,  0.3) \
