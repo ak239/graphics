@@ -80,6 +80,7 @@ uniform int turbulenceCount;
 
 uniform float initFreq;
 
+
 float turbulence(in vec2 v) {
   vec2 freq = vec2(initFreq);
   float sum = 0.0;
@@ -90,7 +91,7 @@ float turbulence(in vec2 v) {
     freq *= vec2(2.0);
   }
   
-  return sum;
+  return sum * 0.5 + 0.5;
 }
 
 out vec4 color;
@@ -106,6 +107,9 @@ uniform float colKt;
 uniform float deltaX;
 uniform float deltaY;
 uniform float freq2;
+
+uniform float T;
+uniform float P;
 
 const float Z_WIDTH = 3.0;
 const float XY_WIDTH = 10.0;
@@ -129,15 +133,64 @@ void main(){
 	
 	while (true)
 	{
-		float top = snoise(curPos.xz * freq);
-		float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
-		float y = curPos.y;
-		if (top - bot > 0 && y < top && y > bot)
+		//float top = snoise(curPos.xz);
+		//float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
+		float v   = turbulence(curPos.xz);
+		float top = pow((v - T) / (1 - T), P) * kTop;
+		float bot = -top * kBot;
+		if (v < 0.0) 
+			top *= -1.0;
+		if (abs(v - curPos.y) < 0.05)
 		{
-			col_val = abs(top - bot) / colKt;
+			if (v < T)
+				color = vec4(0.0, 1.0, 0.0, 1.0);
+			else
+				color = vec4(1.0, 1.0, 0.0, 1.0);
+			return;
+		}
+		if (abs(top - curPos.y) < 0.05 && v < T)
+		{
+			color = vec4(0.0, 0.0, 1.0, 1.0);
+			return;
+		}
+		if (abs(bot - curPos.y) < 0.05 && v < T)
+		{
+			color = vec4(0.0, 1.0, 1.0, 1.0);
+			return;
+		}
+		//float top = (snoise(curPos.xz) - h) * kTop + h; 
+		//float bot = h - (top - h) * kTop * kBot;
+		//if (curPos.y < top && curPos.y > bot && top > h)
+		//{
+		//	col_val = 1.0;
+		//	alpha_acc = 1.0; //abs(top - bot) / colKt;1.0;
+		//	break;
+		//}
+		if (1 == 0){
+		if (abs(top - curPos.y) < 0.05)
+		{
+			col_val = abs(top + 1.0) / 2.0;
 			alpha_acc = 1.0;
 			break;
 		}
+		if (abs(bot - curPos.y) < 0.05)
+		{
+			col_val = abs(bot + 1.0) / 2.0;
+			alpha_acc = 1.0;
+			break;
+		}
+		}
+
+		
+		//float top = snoise(curPos.xz * freq);
+		//float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
+		//float y = curPos.y;
+		//if (top - bot > 0 && y < top && y > bot)
+		//{
+		//	col_val = abs(top - bot) / colKt;
+		//	alpha_acc = 1.0;
+		//	break;
+		//}
 		//float top = (snoise(curPos.xz * freq) - h) * kTop + h; 
 		//if (top > h)
 		//{

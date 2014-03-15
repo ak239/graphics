@@ -44,13 +44,15 @@ const char *CAM_POS = "camera position";
 
 #define FOR_FLOAT_VARS(DO) \
 	DO(h, 0.0) \
-	DO(kTop, 1.0) \
-	DO(kBot, 1.0) \
+	DO(kTop, 0.5) \
+	DO(kBot, 0.1) \
 	DO(freq, 0.5) \
 	DO(colKt, 2.0) \
 	DO(deltaX, 0.0) \
 	DO(deltaY, 0.0) \
-	DO(freq2, 0.5)
+	DO(freq2, 0.5) \
+	DO(T, 0.1) \
+	DO(P, 0.8)
 	//DO(FX0, 1.0) \
 	//DO(FY0, 1.0) \
 	//DO(C0,  0.3) \
@@ -93,7 +95,7 @@ GLuint MVPloc = 0;
 mat4 MVP;
 GLuint camLoc = 0;
 
-GLfloat initFreq = 1.0f;
+GLfloat initFreq = 0.5f;
 GLuint  initFreqLoc = 0;
 
 bool IsLeftButton  = false;
@@ -107,7 +109,7 @@ vec3 camPos(0.0f, 0.0f, Dist);
 glm::quat curCamRot = glm::normalize(glm::quat());
 mat4 View();
 
-GLint  turbulenceCount = 2;
+GLint  turbulenceCount = 1;
 GLuint turbulenceLoc = 0;
 GLfloat stepSize = 2.0 / 50.0;
 GLuint stepSizeLoc = 0;
