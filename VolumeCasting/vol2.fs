@@ -127,88 +127,20 @@ void main(){
 	vec4 col = vec4(0.0f);
 	
 	float alpha_acc = 0.0f;
-	float fstY = -10.0;
 	float col_val = 0.0f;
 	float delta = length(step);
 	
 	while (true)
 	{
-		//float top = snoise(curPos.xz);
-		//float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
 		float v   = turbulence(curPos.xz);
 		float top = pow((v - T) / (1 - T), P) * kTop;
 		float bot = -top * kBot;
-		if (v < 0.0) 
-			top *= -1.0;
-		if (abs(v - curPos.y) < 0.05)
-		{
-			if (v < T)
-				color = vec4(0.0, 1.0, 0.0, 1.0);
-			else
-				color = vec4(1.0, 1.0, 0.0, 1.0);
-			return;
-		}
-		if (abs(top - curPos.y) < 0.05 && v < T)
-		{
-			color = vec4(0.0, 0.0, 1.0, 1.0);
-			return;
-		}
-		if (abs(bot - curPos.y) < 0.05 && v < T)
-		{
-			color = vec4(0.0, 1.0, 1.0, 1.0);
-			return;
-		}
-		//float top = (snoise(curPos.xz) - h) * kTop + h; 
-		//float bot = h - (top - h) * kTop * kBot;
-		//if (curPos.y < top && curPos.y > bot && top > h)
-		//{
-		//	col_val = 1.0;
-		//	alpha_acc = 1.0; //abs(top - bot) / colKt;1.0;
-		//	break;
-		//}
-		if (1 == 0){
-		if (abs(top - curPos.y) < 0.05)
-		{
-			col_val = abs(top + 1.0) / 2.0;
-			alpha_acc = 1.0;
-			break;
-		}
-		if (abs(bot - curPos.y) < 0.05)
-		{
-			col_val = abs(bot + 1.0) / 2.0;
-			alpha_acc = 1.0;
-			break;
-		}
-		}
-
 		
-		//float top = snoise(curPos.xz * freq);
-		//float bot = snoise((curPos.xz + vec2(deltaX, deltaY)) * freq2);
-		//float y = curPos.y;
-		//if (top - bot > 0 && y < top && y > bot)
-		//{
-		//	col_val = abs(top - bot) / colKt;
-		//	alpha_acc = 1.0;
-		//	break;
-		//}
-		//float top = (snoise(curPos.xz * freq) - h) * kTop + h; 
-		//if (top > h)
-		//{
-		//	float bot = h - (top - h ) * kBot; //[-0.25 .. 0]
-		//	float y = curPos.y;
-		//	if (top > bot && y < top && y > bot && top - bot > 0.02)
-		//	{
-		//		float color_sample = 1.0;
-		//		float alpha_sample = top  * 10.0 * delta;
-		//		col_val += (1.0 - alpha_acc) * color_sample * alpha_sample * 3.0;
-		//		alpha_acc += alpha_sample;
-		//		col_val = abs(top - bot) / colKt;
-		//		alpha_acc = 1.0;
-		//		break;
-		//		//col_val = 1.0;
-		//		//alpha_acc = 1.0;
-		//	}
-		//}
+		if (curPos.y < top && curPos.y > bot && v < T)
+		{
+			col_val = abs(top - bot) / colKt;
+			alpha_acc = 1.0; //abs(top - bot) / colKt;1.0;
+		}		
 		curPos += step;
 		if (alpha_acc > 0.9){ col.a = 1.0; break; }
 		if (abs(curPos.x) > XY_WIDTH || abs(curPos.y) > Z_WIDTH || abs(curPos.z) > XY_WIDTH) break;
